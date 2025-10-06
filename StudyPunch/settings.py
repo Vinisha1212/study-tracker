@@ -24,8 +24,8 @@ SECRET_KEY = 'django-insecure-zg6khj#7$0l7p1nwlsbp40%+^neo(b1wn-*7is2&#ig@*$cyyv
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ALLOWED_HOSTS = ['study-tracker-bfdt.onrender.com']
 
-ALLOWED_HOSTS = []
 
 
 # Application definition

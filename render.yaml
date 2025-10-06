@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: study-tracker
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn StudyPunch.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: StudyPunch.settings
+      - key: PYTHON_VERSION
+        value: 3.13

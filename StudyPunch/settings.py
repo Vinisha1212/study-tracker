@@ -115,10 +115,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+
 STATIC_URL = '/static/'
+
+# Your local static folder (where your CSS, JS, and images live)
 STATICFILES_DIRS = [
     BASE_DIR / "StudyPunch" / "static",
 ]
+
+# The folder where Django will collect all static files for deployment
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Optional: media settings if you upload files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

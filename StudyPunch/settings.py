@@ -115,12 +115,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-
 STATIC_URL = '/static/'
 
 # Your local static folder (where your CSS, JS, and images live)
 STATICFILES_DIRS = [
-    BASE_DIR / "StudyPunch" / "static",
+    BASE_DIR / "static",
 ]
 
 # The folder where Django will collect all static files for deployment

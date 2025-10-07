@@ -27,7 +27,7 @@ import random
 def dashboard(request):
     latest_session = StudySession.objects.filter(user=request.user).order_by('-start_time').first()
 
-    # Determine the GIF to show
+    # Determine which GIF to show
     session_gif = 'images/dog.jpg'  # default
     if latest_session:
         if latest_session.end_time is None:  # ongoing study session
@@ -37,7 +37,6 @@ def dashboard(request):
                 session_gif = 'images/shinchan_break.gif'
             else:
                 session_gif = 'images/study.gif'
-
     quotes = [
     "I’m not lazy… I’m on energy-saving mode. ⚡😴",
     "Life is short. Smile while you still have teeth. 😁🦷",
@@ -150,16 +149,36 @@ def dashboard(request):
     "I sparkle… even on Monday mornings. ✨😎"
 ]
 
-    # Pick a random quote
     quote = random.choice(quotes)
 
+    # 🏆 Find the longest (record) study session
+    longest_session = None
+    highest_duration = 0  # in minutes
+
+    all_sessions = StudySession.objects.filter(user=request.user, end_time__isnull=False)
+    for s in all_sessions:
+        duration = (s.end_time - s.start_time).total_seconds() / 60
+        if duration > highest_duration:
+            highest_duration = duration
+            longest_session = s
+
+    # Format record time
+    if highest_duration > 0:
+        hours = int(highest_duration // 60)
+        minutes = int(highest_duration % 60)
+        highest_study_time = f"{hours}h {minutes}m"
+    else:
+        highest_study_time = None
+
+    # Send everything to template
     context = {
         'latest_session': latest_session,
         'quote': quote,
         'session_gif': session_gif,
+        'highest_study_time': highest_study_time,
     }
-    return render(request, 'punch/dashboard.html', context)
 
+    return render(request, 'punch/dashboard.html', context)
 
 
 @login_required

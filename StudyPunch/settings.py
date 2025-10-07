@@ -29,6 +29,8 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'study-tracker-bfdt.onrender.com']
 
 
 
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -126,6 +128,8 @@ STATICFILES_DIRS = [
 
 # The folder where Django will collect all static files for deployment
 STATIC_ROOT = BASE_DIR / "staticfiles"
+# Enable WhiteNoise to serve static files in production
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage" 
 
 # Optional: media settings if you upload files
 MEDIA_URL = '/media/'

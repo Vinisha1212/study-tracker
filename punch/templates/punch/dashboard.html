@@ -6,80 +6,76 @@
     <title>Study Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-purple-50 min-h-screen p-6 flex flex-col items-center">
+<body class="bg-purple-50 min-h-screen flex">
 
-  <div class="flex justify-between items-center w-full mb-6">
-    
-    <!-- Left corner: Shinchan + Logout -->
-    <div class="flex flex-col items-start">
-        <img src="{% static 'images/shinchan.jpg' %}" alt="Shinchan" class="w-20 h-20 mb-2">
-        <a href="{% url 'login' %}"
-           class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition transform hover:scale-105">
+    <!-- Fixed Sidebar -->
+    <aside class="fixed top-0 left-0 h-full w-52 bg-purple-100 p-5 flex flex-col items-center gap-4 shadow-md">
+        <img src="{% static 'images/shinchan.jpg' %}" alt="Shinchan" class="w-20 h-20 rounded-full shadow-md mt-4">
+        <a href="{% url 'session_list' %}" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-3 rounded-lg shadow-md text-center w-full transition transform hover:scale-105">
+            View Sessions 📅
+        </a>
+        <a href="{% url 'login' %}" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-3 rounded-lg shadow-md text-center w-full transition transform hover:scale-105">
             Logout 🚪
         </a>
-    </div>
+    </aside>
 
-    <!-- Center: Title and Quote -->
-    <div class="text-center">
-        <h1 class="text-3xl font-extrabold text-purple-700">
-            🚀 Let's Do It, {{ request.user.username }}! 
-        </h1>
-        <p class="text-purple-500 mt-1 text-lg">{{ quote }}</p>
-    </div>
+    <!-- Main Content -->
+    <main class="flex-1 ml-56 p-6 flex flex-col items-center">
 
-    <!-- Right corner: optional empty space or another element -->
-    <div class="w-20"></div>
-</div>
-
-    {% if messages %}
-    <div class="mb-4 w-full max-w-lg">
-        {% for message in messages %}
-        <div class="p-3 rounded-lg text-center font-medium 
-            {% if message.tags == 'success' %}bg-green-200 text-green-800{% elif message.tags == 'warning' %}bg-yellow-200 text-yellow-800{% else %}bg-blue-200 text-blue-800{% endif %}">
-            {{ message }}
+        <!-- Header -->
+        <div class="text-center mb-4">
+            <h1 class="text-3xl font-extrabold text-purple-700 mb-1">
+                🚀 Let's Do It, {{ request.user.username }}!
+            </h1>
+            <p class="text-purple-500 text-lg italic">{{ quote }}</p>
         </div>
-        {% endfor %}
-    </div>
-    {% endif %}
 
-    <!-- Buttons -->
-    <div class="flex gap-4 mb-6 flex-wrap justify-center">
-        <a href="{% url 'start_study' %}" class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition transform hover:scale-105">Start Study 📚</a>
-        <a href="{% url 'end_study' %}" class="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition transform hover:scale-105">End Study ⏰</a>
-        <a href="{% url 'start_break' %}" class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition transform hover:scale-105">Start Break ☕</a>
-        <a href="{% url 'end_break' %}" class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition transform hover:scale-105">End Break ✨</a>
-    </div>
-    <!-- Highest Productive Time -->
-<div class="bg-yellow-100 px-4 py-3 rounded-xl shadow text-center mb-4 border border-yellow-300 w-fit mx-auto">
-  <h2 class="text-lg font-bold text-yellow-800 mb-1">🏆Peak Power Hour</h2>
-  {% if highest_study_time %}
-    <p class="text-yellow-700 font-medium">
-      {{ highest_study_time }} 🔥
-    </p>
-  {% else %}
-    <p class="text-yellow-500 text-sm">No record yet 🎯</p>
-  {% endif %}
-</div>
-
-
-
-    <!-- Current Session Message -->
-    <div class="text-lg text-purple-700 mb-4 text-center">
-        {% if latest_session and not latest_session.end_time %}
-            🕒 You are in an active session started at {{ latest_session.start_time|date:"H:i" }}. Keep going! 💪
-        {% else %}
-            🎯 Ready to hit your study goals! Start a new session!
+        <!-- Messages -->
+        {% if messages %}
+        <div class="mb-4 w-full max-w-lg">
+            {% for message in messages %}
+            <div class="p-3 rounded-lg text-center font-medium
+                {% if message.tags == 'success' %}bg-green-200 text-green-800
+                {% elif message.tags == 'warning' %}bg-yellow-200 text-yellow-800
+                {% else %}bg-blue-200 text-blue-800{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
         {% endif %}
-    </div>
 
-    <a href="{% url 'session_list' %}" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-6 rounded-lg shadow-md transition transform hover:scale-105 mb-4">
-        View My Past Sessions 📅
-    </a>
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap gap-4 mb-5 justify-center mt-1">
+            <a href="{% url 'start_study' %}" class="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition transform hover:scale-105">Start Study 📚</a>
+            <a href="{% url 'end_study' %}" class="bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition transform hover:scale-105">End Study ⏰</a>
+            <a href="{% url 'start_break' %}" class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition transform hover:scale-105">Start Break ☕</a>
+            <a href="{% url 'end_break' %}" class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transition transform hover:scale-105">End Break ✨</a>
+        </div>
 
-  
-    <div class="mb-6">
-    <img src="{% static session_gif %}" alt="session_gif" class="w-48 h-48 mx-auto">
-</div>
+        <!-- Peak Power Hour -->
+        <div class="bg-yellow-100 px-6 py-4 rounded-xl shadow text-center mb-5 border border-yellow-300 w-fit">
+            <h2 class="text-lg font-bold text-yellow-800 mb-1">🏆 Peak Power Hour</h2>
+            {% if highest_study_time %}
+                <p class="text-yellow-700 font-medium">{{ highest_study_time }} 🔥</p>
+            {% else %}
+                <p class="text-yellow-500 text-sm">No record yet 🎯</p>
+            {% endif %}
+        </div>
 
+        <!-- Current Session Message -->
+        <div class="text-lg text-purple-700 mb-5 text-center">
+            {% if latest_session and not latest_session.end_time %}
+                🕒 You are in an active session started at {{ latest_session.start_time|date:"H:i" }}. Keep going! 💪
+            {% else %}
+                🎯 Ready to hit your study goals! Start a new session!
+            {% endif %}
+        </div>
+
+        <!-- Session GIF -->
+        <div>
+            <img src="{% static session_gif %}" alt="session_gif" class="w-44 h-44 mx-auto rounded-lg shadow-md">
+        </div>
+
+    </main>
 </body>
 </html>

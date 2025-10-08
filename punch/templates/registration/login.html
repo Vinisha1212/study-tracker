@@ -1,7 +1,6 @@
 {% load static %}
 
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -12,65 +11,84 @@
 
 <body class="bg-gradient-to-br from-purple-200 via-purple-100 to-purple-50 min-h-screen flex items-center justify-center px-4 sm:px-0">
 
-
-
   <div class="bg-white shadow-2xl rounded-2xl w-full max-w-sm sm:max-w-md p-6 sm:p-8 flex flex-col items-center relative">
-<!-- Title -->
+    <h1 class="text-2xl sm:text-3xl font-extrabold text-purple-700 mb-4 sm:mb-6 text-center">Welcome Back! 💜</h1>
+    <p class="text-purple-400 text-center mb-6 text-sm sm:text-base">Log in to access your study dashboard 🚀</p>
 
-<h1 class="text-2xl sm:text-3xl font-extrabold text-purple-700 mb-4 sm:mb-6 text-center">Welcome Back! 💜</h1>
-<p class="text-purple-400 text-center mb-6 text-sm sm:text-base">Log in to access your study dashboard 🚀</p>
+    <!-- Login Form -->
+    <form method="post" class="w-full space-y-4">
+      {% csrf_token %}
 
-<!-- Login Form -->
-<form method="post" class="w-full space-y-4">
-  {% csrf_token %}
+      <!-- Non-field errors -->
+      {% if form.non_field_errors %}
+      <div class="bg-red-100 text-red-700 p-3 rounded mb-2 text-center font-medium text-sm sm:text-base">
+        {% for error in form.non_field_errors %}
+          {{ error }}
+        {% endfor %}
+      </div>
+      {% endif %}
 
-  <!-- Non-field errors -->
-  {% if form.non_field_errors %}
-  <div class="bg-red-100 text-red-700 p-3 rounded mb-2 text-center font-medium text-sm sm:text-base">
-    {% for error in form.non_field_errors %}
-      {{ error }}
-    {% endfor %}
+      <!-- Username -->
+      <div class="flex flex-col">
+        <label for="id_username" class="text-purple-600 font-semibold mb-1 text-sm sm:text-base">Username</label>
+        <input type="text" name="username" id="id_username" 
+               class="border border-purple-300 focus:border-purple-500 focus:ring-purple-200 shadow-sm rounded-lg px-3 py-2 text-sm sm:text-base w-full"
+               value="{{ form.username.value|default_if_none:'' }}">
+      </div>
+
+      <!-- Password -->
+      <div class="flex flex-col">
+        <label for="id_password" class="text-purple-600 font-semibold mb-1 text-sm sm:text-base">Password</label>
+        <input type="password" name="password" id="id_password" 
+               class="border border-purple-300 focus:border-purple-500 focus:ring-purple-200 shadow-sm rounded-lg px-3 py-2 text-sm sm:text-base w-full">
+      </div>
+
+      <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 sm:py-3 px-4 rounded-lg shadow-md w-full transition transform hover:scale-105 text-sm sm:text-base">
+        Login
+      </button>
+    </form>
+
+    <!-- Forgot Password -->
+    <p class="text-purple-500 mt-4 text-center text-sm sm:text-base">
+      <button onclick="toggleModal()" class="text-purple-700 font-bold hover:underline">Forgot Password?</button>
+    </p>
+
+    <p class="text-purple-500 mt-4 text-center text-sm sm:text-base">
+      Don't have an account? 
+      <a href="{% url 'register' %}" class="text-purple-700 font-bold hover:underline">Register</a>
+    </p>
   </div>
-  {% endif %}
 
-  <!-- Username -->
-  <div class="flex flex-col">
-    <label for="id_username" class="text-purple-600 font-semibold mb-1 text-sm sm:text-base">Username</label>
-    <input type="text" name="username" id="id_username" 
-           class="border border-purple-300 focus:border-purple-500 focus:ring-purple-200 shadow-sm rounded-lg px-3 py-2 text-sm sm:text-base w-full"
-           value="{{ form.username.value|default_if_none:'' }}">
-    {% if form.username.errors %}
-        <p class="text-red-500 text-xs sm:text-sm mt-1">
-          {% for error in form.username.errors %}{{ error }}{% endfor %}
-        </p>
-    {% endif %}
+  <!-- Password Reset Modal -->
+  <div id="passwordModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl shadow-2xl w-11/12 sm:w-96 p-6 relative">
+      <button onclick="toggleModal()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">✖</button>
+      <h2 class="text-xl font-bold text-purple-700 mb-4 text-center">Reset Password 🔐</h2>
+      
+      <form method="post" action="{% url 'reset_password' %}" class="space-y-4">
+        {% csrf_token %}
+        <div>
+          <label class="block text-purple-600 font-semibold mb-1">Username</label>
+          <input type="text" name="username" required
+                 class="w-full border border-purple-300 rounded-lg px-3 py-2 focus:ring-purple-200 focus:border-purple-500">
+        </div>
+        <div>
+          <label class="block text-purple-600 font-semibold mb-1">New Password</label>
+          <input type="password" name="new_password" required
+                 class="w-full border border-purple-300 rounded-lg px-3 py-2 focus:ring-purple-200 focus:border-purple-500">
+        </div>
+        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded-lg shadow-md transition transform hover:scale-105">
+          Update Password
+        </button>
+      </form>
+    </div>
   </div>
 
-  <!-- Password -->
-  <div class="flex flex-col">
-    <label for="id_password" class="text-purple-600 font-semibold mb-1 text-sm sm:text-base">Password</label>
-    <input type="password" name="password" id="id_password" 
-           class="border border-purple-300 focus:border-purple-500 focus:ring-purple-200 shadow-sm rounded-lg px-3 py-2 text-sm sm:text-base w-full">
-    {% if form.password.errors %}
-        <p class="text-red-500 text-xs sm:text-sm mt-1">
-          {% for error in form.password.errors %}{{ error }}{% endfor %}
-        </p>
-    {% endif %}
-  </div>
-
-  <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 sm:py-3 px-4 rounded-lg shadow-md w-full transition transform hover:scale-105 text-sm sm:text-base">
-    Login
-  </button>
-</form>
-
-
-<p class="text-purple-500 mt-6 text-center text-sm sm:text-base">
-  Don't have an account? 
-  <a href="{% url 'register' %}" class="text-purple-700 font-bold hover:underline">Register</a>
-</p>
-
-
-  </div>
+  <script>
+    function toggleModal() {
+      document.getElementById('passwordModal').classList.toggle('hidden');
+    }
+  </script>
 
 </body>
 </html>

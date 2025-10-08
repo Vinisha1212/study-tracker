@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.utils import timezone
 from .models import StudySession, Break
+from django.contrib.auth.models import User
 from collections import defaultdict
 
 # Registration view
@@ -265,4 +266,17 @@ def session_list(request):
     grouped_list = list(grouped_sessions.items())  
 
     return render(request, 'punch/sessions.html', {'grouped_sessions': grouped_list})
+
+def reset_password(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        new_password = request.POST.get('new_password')
+        try:
+            user = User.objects.get(username=username)
+            user.set_password(new_password)
+            user.save()
+            messages.success(request, 'Password updated successfully!')
+        except User.DoesNotExist:
+            messages.error(request, 'User not found!')
+        return redirect('login')
 
